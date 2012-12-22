@@ -204,6 +204,13 @@ class Report(object):
 			
 			dataRows.append(dataRow)
 		
+                # Ensure that the directory exists.
+                try:
+                    os.mkdir('report')
+                except:
+                    pass
+
+                # Build the CSV and HTML.
 		self.buildCsv(headerRow, dataRows, "report/bills-all.csv")
 		self.buildHtml("Bill Statistics - Complete List", headerRow, dataRows, "report/bills-all.html")		
 				
