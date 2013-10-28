@@ -1,0 +1,6 @@
+congress.db
+data/
+report/
+*.pyc
+*~
+venv
