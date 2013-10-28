@@ -1,14 +1,20 @@
 # Basic example of building the HTML report.
 
-# Make sure we have the required Python libraries.
-# I'm assuming you have root; if not, and you're using a venv, comment out sudo and use your pip/python path.
-if [ -e requirements.txt ]
+# Create the report directory
+mkdir -p report
+
+# Install the packages
+sudo apt-get install `cat debian-requirements.txt | xargs`
+
+if [ ! -e venv ]
 then
-    for python_library in `cat requirements.txt`
-    do
-	sudo pip install $python_library;
-    done
+    virtualenv venv
+    ./venv/bin/pip install -r python-requirements.txt
 fi
+
+# Install nltk packages
+./venv/bin/python -c "import nltk; nltk.download('stopwords')"
+./venv/bin/python -c "import nltk; nltk.download('punkt')"
 
 # Backup old file if present
 if [ -e congress.db ]
@@ -20,9 +26,9 @@ fi
 sqlite3 congress.db < sql/schema.sql
 
 # Update data from Congress.
-PYTHONPATH=src python src/com/bommaritollc/model/Congress.py
+PYTHONPATH=src ./venv/bin/python src/com/bommaritollc/model/Congress.py
 
 # Run report
-PYTHONPATH=src python src/com/bommaritollc/model/Report.py
+PYTHONPATH=src ./venv/bin/python src/com/bommaritollc/model/Report.py
 
 
